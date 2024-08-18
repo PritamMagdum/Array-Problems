@@ -4,30 +4,42 @@
 #include <iostream>
 using namespace std;
 
-void leftRotate(int arr[], int n, int d)
+int subArray(vector<int> &arr, int n, int k)
 {
-    reverse(arr, arr + d);
-    reverse(arr + d, arr + n);
-    reverse(arr, arr + n);
+    map<long long, int> preSumMap;
+    long long sum = 0;
+    int maxLen = 0;
+    for (int i = 0; i < n; i++)
+    {
+        sum += arr[i];
+        if (sum == k)
+        {
+            maxLen = max(maxLen, i + 1);
+        }
+        long long rem = sum - k;
+        if (preSumMap.find(rem) != preSumMap.end())
+        {
+            int len = i - preSumMap[rem];
+            maxLen = max(maxLen, len);
+        }
+        if (preSumMap.find(sum) == preSumMap.end())
+        {
+            preSumMap[sum] = i;
+        }
+    }
+    return maxLen;
 }
 
 int main()
 {
     int n;
     cin >> n;
-    int arr[n];
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
     }
-
-    int d;
-    cin >> d;
-    leftRotate(arr, n, d);
-
-    // to show output
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
+    int k;
+    cin >> k;
+    subArray(arr, n, k);
 }
